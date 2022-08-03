@@ -1,54 +1,21 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ImagesController;
+use Illuminate\Routing\Route;
 
+Route::get('/', [ImagesController::class, 'index']);
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+Route::get('/about', [HomeController::class, 'about']);
 
-Route::get('/', function () {
-    $images = DB::table('images')
-        ->select('*')
-        ->get();
+Route::get('/create', [ImagesController::class, 'create']);
 
-    dd($images->pluck('image')->all());
+Route::post('/store', [ImagesController::class, 'store']);
 
-    return view('welcome');
-});
+Route::get('/show/{id}', [ImagesController::class, 'show']);
 
-Route::get('/about', function () {
-    return view('about');
-});
+Route::get('/edit/{id}', [ImagesController::class, 'edit']);
 
-Route::get('/create', function () {
-    return view('create');
-});
+Route::post('/update/{id}', [ImagesController::class, 'update']);
 
-Route::post('/store', function (\Illuminate\Http\Request $request) {
-    $image = $request->file('image');
-
-    $filename = $request->image->store('uploads');
-
-    DB::table('images')->insert([
-        'image' => $filename
-    ]);
-
-    return redirect('/');
-});
-
-Route::get('/show', function () {
-    return view('show');
-});
-
-Route::get('/edit', function () {
-    return view('edit');
-});
+Route::get('/delete/{id}', [ImagesController::class, 'delete']);
